@@ -1,6 +1,7 @@
 # 모든 app에서 공통적으로 사용하는 함수와 클래스를 모아놓은 곳
 # 공통으로 사용되는 부분이므로 작성 및 수정을 조심스레 해야됨
-import json, requests
+import json
+import requests
 from django.views import View
 from django.http import JsonResponse
 from django.shortcuts import *
@@ -9,7 +10,6 @@ from cryptography.fernet import Fernet
 from studyProject import settings
 from daily.models import Daily
 from user.models import User
-from studyProject.decorate import *
 import base64
 
 # 암호화 클래스
@@ -62,5 +62,3 @@ def JsonAPIRequest(URL, JSONData, method):
         response = requests.get(URL, data=json.dumps(JSONData))
 
     return response.json()
-
-

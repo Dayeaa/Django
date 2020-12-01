@@ -34,7 +34,7 @@ class Regist(View):
             post = form.save(commit=False)
             post.password = crypt.encrypt(data['password'])
             post.password_chk = crypt.encrypt(data['password_chk'])
-            post.email=crypt.encrypt(data['email'])
+            post.email = crypt.encrypt(data['email'])
             post.save()
 
             form = UserLoginForm()
@@ -82,33 +82,34 @@ class Logout(View):
 class Profile(View):
     @LoginAuth
     def get(self, request, id):
-        user = User.objects.get(id=id)
+        user = User.objects.get(id=id)        
         user.email = crypt.decrypt(user.email)
         return render(request, 'user/profile.html', {'user': user})
 
 
 class Profile_update(View):
     @LoginAuth
-    def post(self,request):
+    def post(self, request):
         login_id = request.session.get('login_id', None)
-        user = User.objects.get(id=login_id)
-        form = UserEditForm(request.POST, instance = user)
+        user = User.objects.get(id=login_id)        
+        form = UserEditForm(request.POST, instance=user)
         print("form_isvalid = " + str(form.is_valid()))
         if form.is_valid():
-            post = form.save(commit=False)   
+            post = form.save(commit=False)
             post.name = form.cleaned_data['name']
             post.nickname = form.cleaned_data['nickname']
             post.phone = form.cleaned_data['phone']
             post.description = form.cleaned_data['description']
             post.save()
             form = UserEditForm()
-        return render(request, 'user/profile.html',{'form': form, 'user': user})
+        user.email = crypt.decrypt(user.email)    
+        return render(request, 'user/profile.html', {'form': form, 'user': user})
+
     def get(self, request):
         login_id = request.session.get('login_id', None)
         user = User.objects.get(id=login_id)
-        user_change_form = UserEditForm(instance = user)
-        return render(request, 'user/profile_update.html', {'user_change_form':user_change_form, 'user': user})
-
+        user_change_form = UserEditForm(instance=user)
+        return render(request, 'user/profile_update.html', {'user_change_form': user_change_form, 'user': user})
 
 
 class DailyLike(View):
