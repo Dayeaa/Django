@@ -9,6 +9,7 @@ urlpatterns = [
     path('login/', Login.as_view(), name="login"),
     path('logout/', Logout.as_view(), name="logout"),
     path('profile/<str:id>/', Profile.as_view(), name="profile"),
-    path('profile_update/', Profile_update.as_view(), name="profile_update")
+    path('profile_update/', Profile_update.as_view(), name="profile_update"),
+    path('passwordchange/', Password_change.as_view(), name="password_change")
 
 ]

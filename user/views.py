@@ -6,8 +6,10 @@ from .models import User
 from django.contrib import messages
 from .forms import *
 from .forms import UserEditForm
+from .forms import UserPasswordChangeForm
 from datetime import datetime
 from django.contrib.auth import authenticate
+from django.contrib.auth import update_session_auth_hash
 from django.conf import settings
 from studyProject.util import *
 from studyProject.common import *
@@ -111,6 +113,22 @@ class Profile_update(View):
         user_change_form = UserEditForm(instance=user)
         return render(request, 'user/profile_update.html', {'user_change_form': user_change_form, 'user': user})
 
+class Password_change(View):
+    @LoginAuth
+    def post(request):
+        login_id = request.session.get('login_id', None)
+        user = User.objects.get(id=login_id) 
+        form = UserPasswordChangeForm(request.user,request.POST)
+        if form.is_valid():
+            post = form.save()
+            update_session_auth_hash(request, post)
+            messages.success(request, "비밀번호를 성공적으로 변경하였습니다.")
+        return render(request, 'user/profile.html', {'form': form, 'user': user})
+    def get(self,request):
+        login_id = request.session.get('login_id', None)
+        user = User.objects.get(id=login_id) 
+        form = UserPasswordChangeForm(request.user)
+        return render(request, 'user/password_change.html', {'form': form, 'user': user}) 
 
 class DailyLike(View):
     @LoginAuth
